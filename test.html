@@ -7,10 +7,35 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   </head>
-<body>
-<section class="main-content">
-<p>Hello GIT!!!</p>
-</section>
+<body>	
+	<input id="country" value=''/>
+	<button id="search">search</button>
+	<div id="info"></div>
 </body>
-</html>x
+<script>
+
+$("#search").click(function(){
+
+	var data ={
+		key: 'AIzaSyBSnz1xTHQNO0ZE8xxWqS8QTwPhF7ByFp6Y',
+		cx: '003565169662897413323:u9xnmxccsde',
+		q : $("#country").val()
+	};
+       $.ajax({
+	  url: "https://www.googleapis.com/customsearch/v1?key=AIzaSyBSnz1THQNO0ZE8xxWqS8QTwPhF7ByFp6Y&cx=003565169662897413323:u9xnmxccsde&q="+data.q,
+	  dataType  : "json"
+	})
+	.done(function(data) {
+		console.log(data.items);
+		$("#info").empty();
+		$.each(data.items, function(index, info){
+			$("#info").append("<p><a href='"+info.link+"'>"+info.htmlTitle+"</a></p>");
+		});
+	});
+});
+
+
+</script>
+</html>
