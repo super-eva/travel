@@ -1,0 +1,302 @@
+<html ng-app="MyApp">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.standalone.min.css.map">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.standalone.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+<script src="app.js"></script>
+<script>
+	$('.datepicker').datepicker();
+	$.ajax({
+	  dataType: "json",
+	  url: 'data.json',
+	  data: {},
+	  success: success
+	});
+
+	var records= [];
+	var record_scatters = [];
+	function success(data){
+		for(var i = 0; i<data.length; i++){
+			var scatter = [];
+			scatter.push(data[i].流水號);
+			scatter.push(data[i].level);
+			record_scatters.push(scatter);
+			records.push(data[i].level);
+		}
+		Highcharts.chart('container', {
+
+		    title: {
+		        text: '密調結果'
+		    },
+		    xAxis: {
+		        title: {
+		            text: '流水號'
+		        }
+		    },
+		    yAxis: {
+		    	min: 0,
+		        title: {
+		            text: '布氏級數'
+		        }
+		    },
+		    legend: {
+		        layout: 'vertical',
+		        align: 'right',
+		        verticalAlign: 'middle'
+		    },
+
+		    plotOptions: {
+		       column: {
+		            pointPadding: 0.2,
+		            borderWidth: 0
+		        }
+		    },
+
+		    series: [{
+		        data: records
+		    }]
+
+		});
+
+			Highcharts.chart('container1', {
+			    chart: {
+			        type: 'column'
+			    },
+			    title: {
+			        text: '密調結果'
+			    },
+			    xAxis: {
+			        title: {
+			            text: '流水號'
+			        }
+			    },
+			    yAxis: {
+			        min: 0,
+			        title: {
+			            text: '布氏級數'
+			        }
+			    },
+			    tooltip: {
+			        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+			        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+			            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+			        footerFormat: '</table>',
+			        shared: true,
+			        useHTML: true
+			    },
+			    plotOptions: {
+			        column: {
+			            pointPadding: 0.2,
+			            borderWidth: 0
+			        }
+			    },
+			    series: [{
+			        data: records
+			    }]
+			});
+
+			Highcharts.chart('container2', {
+	    chart: {
+	        type: 'scatter',
+	        zoomType: 'xy'
+	    },
+	    title: {
+	        text:  '密調結果'
+	    },
+	    xAxis: {
+	        title: {
+	            text: '流水號'
+	        }
+	    },
+	    yAxis: {
+	        min: 0,
+	        title: {
+	            text: '布氏級數'
+	        }
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'left',
+	        verticalAlign: 'top',
+	        x: 100,
+	        y: 70,
+	        floating: true,
+	        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+	        borderWidth: 1
+	    },
+	    plotOptions: {
+	        scatter: {
+	            marker: {
+	                radius: 5,
+	                states: {
+	                    hover: {
+	                        enabled: true,
+	                        lineColor: 'rgb(100,100,100)'
+	                    }
+	                }
+	            },
+	            states: {
+	                hover: {
+	                    marker: {
+	                        enabled: true
+	                    }
+	                }
+	            },
+	            tooltip: {
+	                headerFormat: '<b>{series.name}</b><br>',
+	                pointFormat: '{point.x}, {point.y}'
+	            }
+	        }
+	    },
+	    series: [{
+	        color: 'rgba(223, 83, 83, .5)',
+	        data: record_scatters
+	    }]
+	});
+
+	Highcharts.chart('container3', {
+	    chart: {
+	        plotBackgroundColor: null,
+	        plotBorderWidth: null,
+	        plotShadow: false,
+	        type: 'pie'
+	    },
+	    title: {
+	        text: '密調結果'
+	    },
+	    tooltip: {
+	        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	    },
+	    plotOptions: {
+	        pie: {
+	            allowPointSelect: true,
+	            cursor: 'pointer',
+	            dataLabels: {
+	                enabled: true,
+	                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                style: {
+	                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                }
+	            }
+	        }
+	    },
+	    series: [{
+	        name: '村里',
+	        colorByPoint: true,
+	        data: [{
+	            name: '臨江里',
+	            y: 5
+	        }, {
+	            name: '學府里',
+	            y: 10,
+	            sliced: true,
+	            selected: true
+	        }, {
+	            name: '臥龍里',
+	            y: 15
+	        }, {
+	            name: '錦華里',
+	            y: 3
+	        }]
+	    }]
+	});
+
+	setTimeout(function(){
+		$("#line")[0].click();
+	}, 1000);
+}	
+	
+</script>
+<div ng-controller="controller as ctrl" class="panel panel-primary">
+  <div class="panel-heading">Demo</div>
+  <div class="panel-body">
+  <div class="btn-group" role="group" aria-label="">
+		  <button id="line" type="button" class="btn btn-default" ng-click="item='line'">折線圖
+		  </button>
+		  <button type="button" class="btn btn-default" ng-click="item='bar'">直條圖
+		  </button>
+		  <button type="button" class="btn btn-default" ng-click="item='scatter'">分布圖
+		  </button>
+		  <button type="button" class="btn btn-default" ng-click="item='pie'">圓餅圖
+		  </button>
+	</div>
+	<div class="col-md-12">
+		<div class ="col-md-3">
+			<br>
+			<div class="panel panel-primary">
+			<div class="panel-heading" >搜尋條件</div>
+				<div class="panel-body">
+					<form>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">日期</label>
+				   	<input type="text" class="form-control" data-provide="datepicker">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">鄉鎮市區</label>
+				   <select class="form-control">
+				   		<option>請選擇</option>
+				   		<option>大同區</option>
+				   		<option>中山區</option>
+				   		<option>松山區</option>
+				   		<option>大安區</option>
+					</select>
+				  </div>
+				</form>
+				<button class="btn btn-primary">搜尋</button>
+				</div>
+			</div>
+			<form id="form">
+			  <div class="form-group">
+			    <label for="exampleInputEmail1">X Axis</label>
+			    <select class="form-control">
+				  <option ng-selected="item!='pie'">流水號</option>
+				  <option ng-selected="item=='pie'">村里</option>
+				  <option>調查戶數</option>
+				  <option>陽性戶數</option>
+				  <option>布氏指數</option>
+				  <option>布氏級數</option>
+				</select>
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputPassword1">Y Axis</label>
+			   <select class="form-control">
+				   <option >流水號</option>
+				   <option>村里</option>
+				   <option>調查戶數</option>
+				   <option ng-selected="item=='pie'">陽性戶數</option>
+				  <option>布氏指數</option>
+				  <option ng-selected="item!='pie'">布氏級數</option>
+				</select>
+			  </div>
+			</form>
+			<button class="btn btn-primary" ng-click="append()">新增數列</button>
+		</div>
+		<div class ="col-md-9">
+			<div ng-if="item=='line'" id="container" style="height:400px; margin: 0 auto">
+			</div>
+			<div ng-if="item=='bar'" id="container1" style="height: 400px; margin: 0 auto">
+			</div>
+			<div ng-if="item=='scatter'" id="container2" style="height: 400px;  margin: 0 auto"></div>
+			<div ng-if="item=='pie'" id="container3" style="height: 400px;  margin: 0 auto"></div>
+		</div>
+	</div>
+  </div>
+</div>
+</body>
+</html>
